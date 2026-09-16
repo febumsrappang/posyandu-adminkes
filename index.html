@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posyandu Sehat – Sesuai Standar KIA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --primary:#1a6b4a;--primary-light:#e8f5ee;--primary-mid:#2d9264;
+  --accent:#f0a500;--accent-light:#fff8e6;
+  --red:#dc2626;--red-light:#fee2e2;
+  --blue:#2563eb;--blue-light:#dbeafe;
+  --bg:#f4f7f5;--white:#ffffff;
+  --text:#1a2e23;--text-muted:#5a7a6a;--border:#d4e4da;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;background:var(--bg);color:var(--text);}
+
+/* ====== LOGIN ====== */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#e8f5ee 0%,#f4f7f5 60%,#fff8e6 100%);}
+.login-card{background:white;border-radius:16px;border:1px solid var(--border);padding:40px 36px;width:340px;text-align:center;box-shadow:0 8px 32px rgba(26,107,74,0.10);}
+.login-icon{font-size:42px;margin-bottom:10px;}
+.login-logo-name{font-size:22px;font-weight:700;color:var(--primary);}
+.login-logo-sub{font-size:12px;color:var(--text-muted);margin-bottom:28px;}
+.login-field{margin-bottom:14px;text-align:left;}
+.login-field label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:5px;font-weight:600;}
+.login-field input{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#f9fbfa;outline:none;font-family:inherit;}
+.login-field input:focus{border-color:var(--primary);}
+.login-btn{width:100%;background:var(--primary);color:white;border:none;padding:11px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;letter-spacing:0.3px;}
+.login-btn:hover{background:#155a3d;}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;display:none;}
+.login-hint{font-size:11px;color:#94a3b8;margin-top:14px;}
+
+/* ====== MAIN LAYOUT ====== */
+.main-app{display:none;flex-direction:row;min-height:100vh;}
+.sidebar{width:200px;background:var(--primary);color:white;display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.12);}
+.logo-name{font-size:16px;font-weight:700;color:white;}
+.logo-sub{font-size:11px;color:#a8d5bc;margin-top:2px;}
+.logo-badge{font-size:10px;background:var(--accent);color:#5a3a00;padding:2px 7px;border-radius:4px;font-weight:700;margin-top:6px;display:inline-block;}
+.nav{padding:8px 0;flex:1;display:flex;flex-direction:column;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:11px 18px;cursor:pointer;color:rgba(255,255,255,0.65);border-left:3px solid transparent;font-size:13px;transition:all 0.15s;font-weight:500;}
+.nav-item:hover{background:rgba(255,255,255,0.09);color:white;}
+.nav-item.active{background:rgba(255,255,255,0.15);color:white;border-left-color:var(--accent);}
+.nav-logout{margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);}
+.content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:white;border-bottom:1px solid var(--border);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;}
+.breadcrumb{font-size:12px;color:var(--text-muted);}
+.breadcrumb b{color:var(--text);font-weight:600;}
+.user-pill{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary);}
+.content{flex:1;padding:20px 22px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ====== DASHBOARD ====== */
+.page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.stat-card{background:white;border-radius:10px;border:1px solid var(--border);padding:16px;display:flex;align-items:center;gap:12px;}
+.stat-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ico-green{background:var(--primary-light);}
+.ico-blue{background:var(--blue-light);}
+.ico-orange{background:var(--accent-light);}
+.ico-red{background:var(--red-light);}
+.stat-val{font-size:24px;font-weight:700;color:var(--text);}
+.stat-lbl{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.cards-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.card{background:white;border-radius:10px;border:1px solid var(--border);padding:18px;}
+.card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sched-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.sched-item:last-child{border-bottom:none;}
+.sched-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;}
+.sched-date{font-size:11px;color:var(--text-muted);width:100px;}
+.sched-name{font-size:13px;color:var(--primary);font-weight:600;}
+.kia-info{background:var(--primary-light);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--primary);line-height:1.6;}
+.kia-info b{font-weight:700;}
+
+/* ====== TABLES ====== */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.btn-add{background:var(--primary);color:white;border:none;padding:9px 15px;border-radius:7px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;font-weight:600;}
+.btn-add:hover{background:#155a3d;}
+.tcard{background:white;border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+.ttoolbar{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--border);}
+.tinfo{font-size:12px;color:var(--text-muted);}
+.tsearch{display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:6px;padding:6px 11px;font-size:12px;color:var(--text-muted);background:#f9fbfa;}
+.tsearch input{border:none;background:none;outline:none;font-size:12px;color:var(--text);width:140px;font-family:inherit;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#f4f7f5;font-size:11px;font-weight:700;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.3px;}
+tbody td{padding:10px 14px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#f9fbfa;}
+.badge{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;}
+.bg{background:#d1fae5;color:#065f46;}
+.bo{background:#ffedd5;color:#7c2d12;}
+.br{background:#fee2e2;color:#7f1d1d;}
+.bb{background:var(--blue-light);color:#1e3a8a;}
+.by{background:var(--accent-light);color:#7c4a00;}
+.btn-edit{background:none;border:1px solid var(--primary);color:var(--primary);font-size:11px;cursor:pointer;padding:3px 10px;border-radius:4px;margin-right:4px;font-family:inherit;font-weight:600;}
+.btn-edit:hover{background:var(--primary-light);}
+.btn-del{background:none;border:1px solid var(--red);color:var(--red);font-size:11px;cursor:pointer;padding:3px 10px;border-radius:4px;font-family:inherit;font-weight:600;}
+.btn-del:hover{background:var(--red-light);}
+.pgn{display:flex;align-items:center;justify-content:flex-end;gap:3px;padding:9px 14px;border-top:1px solid var(--border);}
+.pb{width:27px;height:27px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:white;color:var(--text-muted);}
+.pb.active{background:var(--primary);color:white;border-color:var(--primary);}
+
+/* ====== MODAL ====== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.38);display:none;align-items:center;justify-content:center;z-index:100;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:12px;width:460px;max-width:95%;box-shadow:0 12px 40px rgba(0,0,0,0.13);max-height:90vh;overflow-y:auto;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:white;z-index:1;}
+.modal-title{font-size:15px;font-weight:700;color:var(--text);}
+.modal-subtitle{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.modal-close{background:none;border:none;font-size:19px;cursor:pointer;color:var(--text-muted);line-height:1;}
+.modal-body{padding:20px 22px;}
+.section-label{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 10px;padding-bottom:5px;border-bottom:1px solid var(--primary-light);}
+.section-label:first-child{margin-top:0;}
+.form-row{margin-bottom:13px;}
+.form-row label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:5px;font-weight:600;}
+.form-row label span.req{color:var(--red);}
+.form-row label span.kia{font-size:10px;color:var(--primary);background:var(--primary-light);padding:1px 5px;border-radius:3px;font-weight:600;margin-left:4px;}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;font-size:13px;color:var(--text);background:white;outline:none;font-family:inherit;}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,107,74,0.08);}
+.form-row textarea{resize:vertical;min-height:60px;}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:white;}
+.btn-cancel{background:none;border:1px solid var(--border);color:var(--text-muted);padding:8px 18px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;}
+.btn-cancel:hover{background:#f4f7f5;}
+.btn-save{background:var(--primary);color:white;border:none;padding:8px 18px;border-radius:7px;font-size:13px;cursor:pointer;font-weight:700;font-family:inherit;}
+.btn-save:hover{background:#155a3d;}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--primary);color:white;padding:11px 20px;border-radius:9px;font-size:13px;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;font-weight:600;}
+.toast.show{opacity:1;}
+.help-text{font-size:11px;color:var(--text-muted);margin-top:4px;}
+.usia-result{font-size:12px;color:var(--primary);font-weight:600;margin-top:4px;}
+.status-gizi-guide{background:var(--primary-light);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--primary);margin-top:10px;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-icon">🌿</div>
+    <div class="login-logo-name">Posyandu Sehat</div>
+    <div class="login-logo-sub">Sistem Informasi Posyandu – Standar KIA</div>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@posyandu.com">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="login-btn" onclick="doLogin()">MASUK</button>
+    <div class="login-err" id="loginErr">Email atau password salah!</div>
+    <div class="login-hint">Demo: email apa saja + password: admin123</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="main-app" id="mainApp">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-name">🌿 Posyandu Sehat</div>
+      <div class="logo-sub">Sistem Informasi</div>
+      <div class="logo-badge">Standar KIA 2024</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-item" onclick="showPage('dashboard',this)">🏠 Dashboard</div>
+      <div class="nav-item" onclick="showPage('ibu',this)">🤰 Data Ibu Hamil</div>
+      <div class="nav-item" onclick="showPage('balita',this)">👶 Data Balita</div>
+      <div class="nav-item" onclick="showPage('imunisasi',this)">💉 Imunisasi</div>
+      <div class="nav-item" onclick="showPage('laporan',this)">📊 Laporan</div>
+      <div class="nav-item nav-logout" onclick="doLogout()">← Logout</div>
+    </nav>
+  </div>
+  <div class="content-area">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb">Dashboard / <b>Dashboard</b></div>
+      <div class="user-pill"><div class="avatar">AP</div> Admin Posyandu</div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-title">Halo, Admin Posyandu Sehat! 👋</div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-ico ico-green">🤰</div><div><div class="stat-val" id="statIbu">0</div><div class="stat-lbl">Ibu Hamil Terdaftar</div></div></div>
+          <div class="stat-card"><div class="stat-ico ico-blue">👶</div><div><div class="stat-val" id="statBalita">0</div><div class="stat-lbl">Balita Terdaftar</div></div></div>
+          <div class="stat-card"><div class="stat-ico ico-orange">💉</div><div><div class="stat-val" id="statImun">0</div><div class="stat-lbl">Data Imunisasi</div></div></div>
+          <div class="stat-card"><div class="stat-ico ico-red">⚠️</div><div><div class="stat-val" id="statRisiko">0</div><div class="stat-lbl">Risiko Tinggi</div></div></div>
+        </div>
+        <div class="cards-row">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📅 Jadwal Posyandu</div>
+              <button class="btn-add" style="font-size:12px;padding:6px 11px;" onclick="openModal('jadwal')">+ Tambah</button>
+            </div>
+            <div id="jadwalList">
+              <div class="sched-item"><div class="sched-dot"></div><div class="sched-date">20 Mei 2025</div><div class="sched-name">Imunisasi DPT-HB-Hib</div></div>
+              <div class="sched-item"><div class="sched-dot"></div><div class="sched-date">25 Mei 2025</div><div class="sched-name">Pemeriksaan Ibu Hamil</div></div>
+              <div class="sched-item"><div class="sched-dot"></div><div class="sched-date">1 Jun 2025</div><div class="sched-name">Penimbangan Balita</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">📋 Info Standar KIA</div>
+            <div class="kia-info">
+              <b>Kunjungan ANC Minimal (K1–K6):</b><br>
+              • Trimester 1: 2× (s/d 12 minggu)<br>
+              • Trimester 2: 1× (12–24 minggu)<br>
+              • Trimester 3: 3× (28 minggu dst)<br><br>
+              <b>Penimbangan Balita:</b> Setiap bulan<br>
+              <b>LILA Normal Ibu:</b> ≥23,5 cm<br>
+              <b>IMT Normal Ibu:</b> 18,5–25,0
+            </div>
+          </div>
+        </div>
+        <div class="kia-info" style="margin-top:14px;border-color:#f0a500;background:#fff8e6;color:#7c2d12;">
+          <b>⚠️ Catatan Keamanan Data:</b> Data pada aplikasi ini disimpan di Google Sheets lewat backend sederhana, tapi sistem login-nya masih berupa password tunggal (bukan autentikasi per petugas yang aman). Cocok untuk penggunaan internal skala kecil oleh tim terpercaya, belum untuk skala luas dengan banyak akun. Untuk data warga dalam jumlah besar, pertimbangkan sistem resmi seperti e-Kohort/ASIK Kemenkes yang sudah punya autentikasi & perlindungan data kesehatan sesuai standar.
+        </div>
+      </div>
+
+      <!-- DATA IBU HAMIL -->
+      <div class="page" id="page-ibu">
+        <div class="ph">
+          <div class="page-title">🤰 Data Ibu Hamil</div>
+          <button class="btn-add" onclick="openModal('ibu')">+ Tambah Data Ibu</button>
+        </div>
+        <div class="tcard">
+          <div class="ttoolbar">
+            <div class="tinfo" id="ibuInfo">0 entri</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button class="btn-edit" onclick="exportCSV('ibu')">⬇️ Export CSV</button>
+              <div class="tsearch">🔍 <input placeholder="Cari nama ibu..." oninput="filterTable('ibu',this.value)"></div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th><th>Nama Ibu</th><th>NIK</th><th>Umur</th><th>UK (minggu)</th>
+                <th>LILA (cm)</th><th>TD</th><th>Kunjungan ANC</th><th>Status Risiko</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="ibuBody"></tbody>
+          </table>
+          <div class="pgn"><div class="pb">‹</div><div class="pb active">1</div><div class="pb">›</div></div>
+        </div>
+      </div>
+
+      <!-- DATA BALITA -->
+      <div class="page" id="page-balita">
+        <div class="ph">
+          <div class="page-title">👶 Data Balita</div>
+          <button class="btn-add" onclick="openModal('balita')">+ Tambah Data Balita</button>
+        </div>
+        <div class="tcard">
+          <div class="ttoolbar">
+            <div class="tinfo" id="balitaInfo">0 entri</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button class="btn-edit" onclick="exportCSV('balita')">⬇️ Export CSV</button>
+              <div class="tsearch">🔍 <input placeholder="Cari nama anak..." oninput="filterTable('balita',this.value)"></div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th><th>Nama Anak</th><th>NIK / No KIA</th><th>Tgl Lahir</th><th>Usia</th>
+                <th>BB (kg)</th><th>TB (cm)</th><th>LK (cm)</th><th>Status Gizi</th><th>ASI Eksklusif</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="balitaBody"></tbody>
+          </table>
+          <div class="pgn"><div class="pb">‹</div><div class="pb active">1</div><div class="pb">›</div></div>
+        </div>
+      </div>
+
+      <!-- IMUNISASI -->
+      <div class="page" id="page-imunisasi">
+        <div class="ph">
+          <div class="page-title">💉 Data Imunisasi</div>
+          <button class="btn-add" onclick="openModal('imunisasi')">+ Tambah Data Imunisasi</button>
+        </div>
+        <div class="tcard">
+          <div class="ttoolbar">
+            <div class="tinfo" id="imunInfo">0 entri</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button class="btn-edit" onclick="exportCSV('imunisasi')">⬇️ Export CSV</button>
+              <div class="tsearch">🔍 <input placeholder="Cari nama anak..." oninput="filterTable('imunisasi',this.value)"></div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th><th>Nama Anak</th><th>Nama Ibu</th><th>Tgl Lahir Anak</th><th>Jenis Imunisasi</th>
+                <th>Dosis ke-</th><th>Tanggal Imunisasi</th><th>Tgl Imunisasi Berikutnya</th><th>Petugas</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="imunBody"></tbody>
+          </table>
+          <div class="pgn"><div class="pb">‹</div><div class="pb active">1</div><div class="pb">›</div></div>
+        </div>
+      </div>
+
+      <!-- LAPORAN -->
+      <div class="page" id="page-laporan">
+        <div class="page-title">📊 Laporan & Rekapitulasi</div>
+        <div class="cards-row" style="margin-bottom:14px;">
+          <div class="card">
+            <div class="card-title">📈 Status Gizi Balita</div>
+            <div id="laporanGizi" style="font-size:13px;line-height:2.2;"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🤰 Status Risiko Ibu Hamil</div>
+            <div id="laporanRisiko" style="font-size:13px;line-height:2.2;"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💉 Rekap Imunisasi per Jenis</div>
+          <div id="laporanImun" style="font-size:13px;line-height:2.2;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL IBU HAMIL (Standar KIA) ===== -->
+<div class="modal-overlay" id="modal-ibu">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="ibuModalTitle">Tambah Data Ibu Hamil</div>
+        <div class="modal-subtitle">Sesuai Standar Buku KIA</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('ibu')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ibuEditIdx">
+
+      <div class="section-label">Data Identitas Ibu</div>
+      <div class="form-row"><label>Nama Lengkap Ibu <span class="req">*</span></label><input id="ibuNama" placeholder="Nama sesuai KTP"></div>
+      <div class="form-2col">
+        <div class="form-row"><label>NIK <span class="kia">KIA</span></label><input id="ibuNIK" placeholder="16 digit NIK" maxlength="16"></div>
+        <div class="form-row"><label>No. HP / WA</label><input id="ibuHP" placeholder="08xx-xxxx-xxxx"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Lahir Ibu <span class="req">*</span></label><input id="ibuTglLahir" type="date" onchange="hitungUmurIbu()"></div>
+        <div class="form-row"><label>Umur (otomatis)</label><input id="ibuUmur" readonly placeholder="Terisi otomatis" style="background:#f4f7f5;"></div>
+      </div>
+      <div class="form-row"><label>Alamat Lengkap <span class="req">*</span></label><textarea id="ibuAlamat" placeholder="RT/RW, Desa/Kelurahan, Kecamatan"></textarea></div>
+      <div class="form-2col">
+        <div class="form-row"><label>Golongan Darah</label>
+          <select id="ibuGoldar"><option value="">- Pilih -</option><option>A</option><option>B</option><option>O</option><option>AB</option></select>
+        </div>
+        <div class="form-row"><label>Pendidikan Terakhir</label>
+          <select id="ibuPendidikan"><option value="">- Pilih -</option><option>Tidak Sekolah</option><option>SD</option><option>SMP</option><option>SMA/SMK</option><option>D3</option><option>S1</option><option>S2/S3</option></select>
+        </div>
+      </div>
+      <div class="form-row"><label>Nama Suami</label><input id="ibuSuami" placeholder="Nama suami/wali"></div>
+
+      <div class="section-label">Data Kehamilan Saat Ini</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Hamil ke- <span class="kia">KIA</span></label><input id="ibuG" type="number" min="1" placeholder="G (Gravida)"></div>
+        <div class="form-row"><label>Persalinan sebelumnya</label><input id="ibuP" type="number" min="0" placeholder="P (Para)"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Keguguran (A)</label><input id="ibuA" type="number" min="0" placeholder="A (Abortus)"></div>
+        <div class="form-row"><label>HPHT <span class="kia">KIA</span> <span class="req">*</span></label><input id="ibuHPHT" type="date" onchange="hitungUK()"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>HPL (otomatis)</label><input id="ibuHPL" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis"></div>
+        <div class="form-row"><label>Usia Kehamilan (otomatis)</label><input id="ibuUK" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis"></div>
+      </div>
+      <div class="form-row"><label>Trimester</label><input id="ibuTrimester" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis"></div>
+
+      <div class="section-label">Data Antropometri & Pemeriksaan</div>
+      <div class="form-3col">
+        <div class="form-row"><label>BB Sebelum Hamil (kg)</label><input id="ibuBBsebelum" type="number" step="0.1" placeholder="kg"></div>
+        <div class="form-row"><label>BB Saat Ini (kg) <span class="kia">KIA</span></label><input id="ibuBB" type="number" step="0.1" placeholder="kg"></div>
+        <div class="form-row"><label>TB (cm) <span class="kia">KIA</span></label><input id="ibuTB" type="number" step="0.1" placeholder="cm"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>LILA (cm) <span class="kia">KIA</span> <span class="req">*</span></label><input id="ibuLILA" type="number" step="0.1" placeholder="≥23,5 cm = normal" onchange="cekLILA()"></div>
+        <div class="form-row"><label>Tekanan Darah <span class="kia">KIA</span></label><input id="ibuTD" placeholder="Cth: 110/70 mmHg"></div>
+      </div>
+      <div class="form-row"><label>Tinggi Fundus Uteri / TFU (cm)</label><input id="ibuTFU" type="number" step="0.1" placeholder="cm (diisi saat trimester 2-3)"></div>
+
+      <div class="section-label">Kunjungan ANC</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Kunjungan ke- <span class="kia">KIA</span></label>
+          <select id="ibuKunjungan"><option>K1</option><option>K2</option><option>K3</option><option>K4</option><option>K5</option><option>K6</option></select>
+        </div>
+        <div class="form-row"><label>Tanggal Kunjungan</label><input id="ibuTglKunjungan" type="date"></div>
+      </div>
+
+      <div class="section-label">Faktor Risiko & Status</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Status Risiko <span class="kia">KIA</span> <span class="req">*</span></label>
+          <select id="ibuRisiko">
+            <option value="Rendah">Risiko Rendah</option>
+            <option value="Tinggi">Risiko Tinggi</option>
+            <option value="Sangat Tinggi">Risiko Sangat Tinggi</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Rencana Persalinan</label>
+          <select id="ibuRencanaBersalin">
+            <option>Puskesmas</option><option>Bidan Praktek</option><option>Rumah Sakit</option><option>Klinik</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row"><label>Catatan / Faktor Risiko</label><textarea id="ibuCatatan" placeholder="Misal: anemia, HB rendah, riwayat SC, dll"></textarea></div>
+
+      <div class="section-label">Suplemen & Imunisasi Ibu</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tablet Fe (butir) <span class="kia">KIA</span></label><input id="ibuFe" type="number" placeholder="Jumlah tablet"></div>
+        <div class="form-row"><label>Imunisasi TT <span class="kia">KIA</span></label>
+          <select id="ibuTT"><option value="">- Pilih -</option><option>TT1</option><option>TT2</option><option>TT3</option><option>TT4</option><option>TT5</option><option>TT Lengkap</option></select>
+        </div>
+      </div>
+
+      <div class="section-label">Pemeriksaan Laboratorium (10T) <span style="font-size:10px;color:var(--text-muted);">(minimal 1x kehamilan)</span></div>
+      <div class="form-3col">
+        <div class="form-row"><label>Hb (g/dL) <span class="kia">KIA</span></label><input id="ibuHb" type="number" step="0.1" placeholder="Normal ≥11 g/dL" onchange="cekHb()"></div>
+        <div class="form-row"><label>Protein Urine</label>
+          <select id="ibuProtein"><option value="">- Pilih -</option><option>Negatif</option><option>+1</option><option>+2</option><option>+3</option></select>
+        </div>
+        <div class="form-row"><label>Gula Darah Sewaktu (mg/dL)</label><input id="ibuGDS" type="number" placeholder="mg/dL"></div>
+      </div>
+      <div class="form-3col">
+        <div class="form-row"><label>Tes HIV</label>
+          <select id="ibuHIV" onchange="cekLabReaktif()"><option value="Belum Tes">Belum Tes</option><option value="Non-Reaktif">Non-Reaktif</option><option value="Reaktif">Reaktif</option></select>
+        </div>
+        <div class="form-row"><label>Tes Sifilis</label>
+          <select id="ibuSifilis" onchange="cekLabReaktif()"><option value="Belum Tes">Belum Tes</option><option value="Non-Reaktif">Non-Reaktif</option><option value="Reaktif">Reaktif</option></select>
+        </div>
+        <div class="form-row"><label>Tes Hepatitis B (HBsAg)</label>
+          <select id="ibuHepB" onchange="cekLabReaktif()"><option value="Belum Tes">Belum Tes</option><option value="Non-Reaktif">Non-Reaktif</option><option value="Reaktif">Reaktif</option></select>
+        </div>
+      </div>
+      <div class="help-text" id="labWarning" style="color:var(--red);font-weight:600;"></div>
+
+      <div class="section-label">Pemeriksaan Janin <span style="font-size:10px;color:var(--text-muted);">(diisi trimester 3)</span></div>
+      <div class="form-2col">
+        <div class="form-row"><label>DJJ - Denyut Jantung Janin (x/menit)</label><input id="ibuDJJ" type="number" placeholder="Normal: 120-160 x/menit"></div>
+        <div class="form-row"><label>Presentasi Janin</label>
+          <select id="ibuPresentasi"><option value="">- Pilih -</option><option>Kepala</option><option>Sungsang</option><option>Lintang</option><option>Belum jelas</option></select>
+        </div>
+      </div>
+      <div class="form-row"><label>Catatan Temu Wicara / Konseling</label><textarea id="ibuTemuWicara" placeholder="Ringkasan konseling: gizi, tanda bahaya kehamilan, KB pasca salin, dll"></textarea></div>
+
+      <div class="section-label">P4K (Program Perencanaan Persalinan & Pencegahan Komplikasi)</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Penolong Persalinan</label>
+          <select id="ibuPenolong"><option value="">- Pilih -</option><option>Dokter</option><option>Bidan</option><option>Dokter Spesialis Obgyn</option></select>
+        </div>
+        <div class="form-row"><label>Tempat Bersalin (Rencana)</label><input id="ibuTempatBersalin" placeholder="Cth: Puskesmas Melati"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Calon Pendonor Darah</label><input id="ibuDonor" placeholder="Nama & golongan darah pendonor"></div>
+        <div class="form-row"><label>Rencana Transportasi Rujukan</label><input id="ibuTransport" placeholder="Cth: mobil desa, ambulans"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('ibu')">Batal</button>
+      <button class="btn-save" onclick="saveIbu()">💾 Simpan Data Ibu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL BALITA (Standar KIA) ===== -->
+<div class="modal-overlay" id="modal-balita">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="balitaModalTitle">Tambah Data Balita</div>
+        <div class="modal-subtitle">Sesuai Standar Buku KIA</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('balita')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="balitaEditIdx">
+
+      <div class="section-label">Identitas Anak</div>
+      <div class="form-row"><label>Nama Anak <span class="req">*</span></label><input id="balitaNama" placeholder="Nama lengkap anak"></div>
+      <div class="form-2col">
+        <div class="form-row"><label>NIK / No. Buku KIA <span class="kia">KIA</span></label><input id="balitaNIK" placeholder="NIK anak / No. KIA"></div>
+        <div class="form-row"><label>Jenis Kelamin <span class="req">*</span></label>
+          <select id="balitaJK"><option value="">- Pilih -</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Lahir <span class="kia">KIA</span> <span class="req">*</span></label><input id="balitaTglLahir" type="date" onchange="hitungUsiaBalita();hitungStatusGizi()"></div>
+        <div class="form-row"><label>Usia (otomatis)</label><input id="balitaUsia" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis"></div>
+      </div>
+      <div class="form-row"><label>Nama Ibu Kandung <span class="req">*</span></label><input id="balitaIbu" placeholder="Nama ibu kandung"></div>
+      <div class="form-row"><label>Nama Ayah</label><input id="balitaAyah" placeholder="Nama ayah"></div>
+      <div class="form-row"><label>Alamat</label><input id="balitaAlamat" placeholder="Alamat rumah"></div>
+
+      <div class="section-label">Data Kelahiran</div>
+      <div class="form-3col">
+        <div class="form-row"><label>BB Lahir (gram) <span class="kia">KIA</span></label><input id="balitaBBLahir" type="number" placeholder="Cth: 3200"></div>
+        <div class="form-row"><label>PB Lahir (cm) <span class="kia">KIA</span></label><input id="balitaPBLahir" type="number" step="0.1" placeholder="Cth: 48"></div>
+        <div class="form-row"><label>Jenis Persalinan</label>
+          <select id="balitaJenisPersalinan"><option>Normal</option><option>SC</option><option>Vakum</option><option>Forceps</option></select>
+        </div>
+      </div>
+
+      <div class="section-label">Pengukuran Saat Ini <span style="font-size:10px;color:var(--text-muted);">(diisi tiap kunjungan)</span></div>
+      <div class="form-3col">
+        <div class="form-row"><label>BB (kg) <span class="kia">KIA</span> <span class="req">*</span></label><input id="balitaBB" type="number" step="0.1" placeholder="kg" onchange="hitungStatusGizi()"></div>
+        <div class="form-row"><label>TB/PB (cm) <span class="kia">KIA</span></label><input id="balitaTB" type="number" step="0.1" placeholder="cm" onchange="hitungStatusGizi()"></div>
+        <div class="form-row"><label>LK (cm) <span class="kia">KIA</span></label><input id="balitaLK" type="number" step="0.1" placeholder="Lingkar kepala"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Timbang</label><input id="balitaTglTimbang" type="date"></div>
+        <div class="form-row"><label>Status Gizi <span class="kia">KIA</span> <span class="req">*</span></label>
+          <select id="balitaGizi">
+            <option value="Gizi Baik">Gizi Baik</option>
+            <option value="Gizi Kurang">Gizi Kurang</option>
+            <option value="Gizi Buruk">Gizi Buruk</option>
+            <option value="Gizi Lebih">Gizi Lebih</option>
+            <option value="Obesitas">Obesitas</option>
+          </select>
+        </div>
+      </div>
+      <div class="status-gizi-guide" id="giziAutoResult">
+        <b>Status gizi akan terisi otomatis</b> berdasarkan BB, TB, usia & jenis kelamin (indeks BB/U, standar Permenkes No.2/2020).<br>
+        <span style="color:#7c2d12;">⚠️ Ini estimasi skrining awal, bukan diagnosis final. Konfirmasi selalu dengan grafik KMS/Buku KIA fisik atau petugas gizi/bidan.</span>
+      </div>
+
+      <div class="section-label">ASI & Makanan</div>
+      <div class="form-2col">
+        <div class="form-row"><label>ASI Eksklusif (0–6 bln) <span class="kia">KIA</span></label>
+          <select id="balitaASI"><option value="">- Pilih -</option><option value="Ya">Ya</option><option value="Tidak">Tidak</option><option value="Sebagian">Sebagian</option><option value="N/A (>6 bln)">N/A (&gt;6 bln)</option></select>
+        </div>
+        <div class="form-row"><label>MPASI dimulai (bln ke-)</label><input id="balitaMPASI" type="number" min="4" max="9" placeholder="≥6 bulan (ideal)"></div>
+      </div>
+
+      <div class="section-label">Vitamin A <span style="font-size:10px;color:var(--text-muted);">(Biru 6-11 bln, Merah 12-59 bln, 2x/tahun)</span></div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Pemberian Vit. A</label><input id="balitaVitATgl" type="date"></div>
+        <div class="form-row"><label>Dosis Vitamin A</label>
+          <select id="balitaVitADosis"><option value="">- Belum diberikan -</option><option value="Biru (100.000 IU)">Kapsul Biru (100.000 IU)</option><option value="Merah (200.000 IU)">Kapsul Merah (200.000 IU)</option></select>
+        </div>
+      </div>
+
+      <div class="section-label">Perkembangan (SDIDTK) <span class="kia">KIA</span></div>
+      <div class="form-2col">
+        <div class="form-row"><label>Motorik Kasar</label>
+          <select id="balitaMotorikKasar" onchange="hitungPerkembangan()"><option value="">- Pilih -</option><option>Sesuai Usia</option><option>Meragukan</option><option>Penyimpangan</option></select>
+        </div>
+        <div class="form-row"><label>Motorik Halus</label>
+          <select id="balitaMotorikHalus" onchange="hitungPerkembangan()"><option value="">- Pilih -</option><option>Sesuai Usia</option><option>Meragukan</option><option>Penyimpangan</option></select>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Bahasa & Bicara</label>
+          <select id="balitaBahasa" onchange="hitungPerkembangan()"><option value="">- Pilih -</option><option>Sesuai Usia</option><option>Meragukan</option><option>Penyimpangan</option></select>
+        </div>
+        <div class="form-row"><label>Sosialisasi & Kemandirian</label>
+          <select id="balitaSosial" onchange="hitungPerkembangan()"><option value="">- Pilih -</option><option>Sesuai Usia</option><option>Meragukan</option><option>Penyimpangan</option></select>
+        </div>
+      </div>
+      <div class="form-row"><label>Status Perkembangan Keseluruhan</label>
+        <input id="balitaPerkembangan" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis dari 4 aspek di atas"></div>
+      <div class="form-row"><label>Catatan Perkembangan</label><textarea id="balitaCatatan" placeholder="Misal: sudah bisa jalan, belum bisa bicara, dll"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('balita')">Batal</button>
+      <button class="btn-save" onclick="saveBalita()">💾 Simpan Data Balita</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL IMUNISASI (Standar KIA) ===== -->
+<div class="modal-overlay" id="modal-imunisasi">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="imunModalTitle">Tambah Data Imunisasi</div>
+        <div class="modal-subtitle">Program Imunisasi Nasional – Standar KIA</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('imunisasi')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="imunEditIdx">
+
+      <div class="section-label">Data Anak</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Nama Anak <span class="req">*</span></label><input id="imunAnak" placeholder="Nama anak"></div>
+        <div class="form-row"><label>Nama Ibu <span class="req">*</span></label><input id="imunIbu" placeholder="Nama ibu kandung"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Lahir Anak <span class="kia">KIA</span></label><input id="imunTglLahirAnak" type="date"></div>
+        <div class="form-row"><label>Jenis Kelamin</label>
+          <select id="imunJK"><option value="">- Pilih -</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select>
+        </div>
+      </div>
+
+      <div class="section-label">Data Imunisasi</div>
+      <div class="form-2col">
+        <div class="form-row"><label>Jenis Imunisasi <span class="kia">KIA</span> <span class="req">*</span></label>
+          <select id="imunJenis" onchange="isiDosisOptions()">
+            <option value="">- Pilih Jenis -</option>
+            <option value="Hepatitis B (HB-0)">Hepatitis B (HB-0) – lahir</option>
+            <option value="BCG">BCG – 1 bulan</option>
+            <option value="Polio (OPV)">Polio OPV</option>
+            <option value="Polio (IPV)">Polio IPV</option>
+            <option value="DPT-HB-Hib">DPT-HB-Hib (Pentavalen)</option>
+            <option value="PCV">PCV (Pneumokokus)</option>
+            <option value="Rotavirus">Rotavirus</option>
+            <option value="MR/Campak-Rubela">MR / Campak-Rubela</option>
+            <option value="JE">Japanese Encephalitis (JE)</option>
+            <option value="HPV">HPV (khusus anak SD)</option>
+            <option value="TT">TT (Ibu Hamil)</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Dosis ke- <span class="kia">KIA</span></label>
+          <select id="imunDosis"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4 (Booster)</option></select>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Tanggal Pemberian <span class="req">*</span></label><input id="imunTanggal" type="date" onchange="hitungImunBerikutnya()"></div>
+        <div class="form-row"><label>Tgl Imunisasi Berikutnya</label><input id="imunBerikutnya" readonly style="background:#f4f7f5;" placeholder="Terisi otomatis"></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label>Cara Pemberian</label>
+          <select id="imunCara"><option value="">- Pilih -</option><option>Injeksi IM</option><option>Injeksi SC</option><option>Oral (tetes)</option><option>Intradermal</option></select>
+        </div>
+        <div class="form-row"><label>Nama Petugas <span class="req">*</span></label><input id="imunPetugas" placeholder="Nama bidan/petugas"></div>
+      </div>
+      <div class="form-row"><label>Lokasi Penyuntikan</label>
+        <select id="imunLokasi"><option value="">- Pilih -</option><option>Paha kiri</option><option>Paha kanan</option><option>Lengan atas kiri</option><option>Lengan atas kanan</option><option>Oral</option></select>
+      </div>
+      <div class="form-row"><label>Reaksi Pasca Imunisasi (KIPI)</label>
+        <select id="imunKIPI"><option value="Tidak ada">Tidak ada reaksi</option><option value="Demam ringan">Demam ringan</option><option value="Kemerahan lokal">Kemerahan lokal</option><option value="Bengkak lokal">Bengkak lokal</option><option value="Lain-lain">Lain-lain</option></select>
+      </div>
+      <div class="form-row"><label>Catatan</label><textarea id="imunCatatan" placeholder="Catatan tambahan..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('imunisasi')">Batal</button>
+      <button class="btn-save" onclick="saveImun()">💾 Simpan Data Imunisasi</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL JADWAL -->
+<div class="modal-overlay" id="modal-jadwal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Tambah Jadwal Posyandu</div><button class="modal-close" onclick="closeModal('jadwal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row"><label>Nama Kegiatan <span class="req">*</span></label>
+        <select id="jadwalKegiatan">
+          <option>Penimbangan Balita</option><option>Pemeriksaan Ibu Hamil</option>
+          <option>Imunisasi Rutin</option><option>Penyuluhan Gizi</option>
+          <option>Pemberian Vitamin A</option><option>SDIDTK</option><option>Lainnya</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Nama Kegiatan (jika Lainnya)</label><input id="jadwalNama" placeholder="Isi jika pilih Lainnya"></div>
+      <div class="form-row"><label>Tanggal <span class="req">*</span></label><input id="jadwalTgl" type="date"></div>
+      <div class="form-row"><label>Waktu</label><input id="jadwalWaktu" type="time" placeholder="08:00"></div>
+      <div class="form-row"><label>Tempat</label><input id="jadwalTempat" placeholder="Cth: Balai Desa, Posyandu Melati"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('jadwal')">Batal</button>
+      <button class="btn-save" onclick="saveJadwal()">💾 Simpan Jadwal</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GRAFIK KMS -->
+<div class="modal-overlay" id="modal-grafik">
+  <div class="modal" style="width:600px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="grafikTitle">Grafik Pertumbuhan (KMS)</div>
+        <div class="modal-subtitle">Berat Badan menurut Umur — estimasi pendekatan WHO/Kemenkes</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('grafik')">✕</button>
+    </div>
+    <div class="modal-body" id="grafikBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('grafik')">Tutup</button>
+      <button class="btn-save" onclick="cetakGrafik()">🖨️ Cetak</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== KONFIGURASI DATABASE (Google Sheets via Apps Script) =====
+// Isi dua baris ini setelah backend Apps Script Anda selesai di-deploy.
+// Lihat panduan lengkap di file AppsScript_Backend.gs
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8e58DfX-UnT-cySzcl-ChorUFDBBxpiFs4mKa5bZ5iKh4roJ4pb2uJqpYsWAl58Id/exec';
+var APPS_SCRIPT_TOKEN = 'adminkes_2026';
+var dbTerhubung = APPS_SCRIPT_URL.indexOf('GANTI_DENGAN') !== 0;
+
+// ===== DATA =====
+var dataIbu = [];
+var dataBalita = [];
+var dataImun = [];
+var dataJadwal = [
+  {label:'Imunisasi DPT-HB-Hib',tgl:'2025-05-20',waktu:'',tempat:''},
+  {label:'Pemeriksaan Ibu Hamil',tgl:'2025-05-25',waktu:'',tempat:''},
+  {label:'Penimbangan Balita',tgl:'2025-06-01',waktu:'',tempat:''}
+];
+function renderJadwal(){
+  var el=document.getElementById('jadwalList');
+  if(!dataJadwal.length){el.innerHTML='<span style="color:var(--text-muted);font-size:12px;">Belum ada jadwal</span>';return;}
+  el.innerHTML=dataJadwal.map(j=>{
+    var tglFmt=j.tgl?new Date(j.tgl).getDate()+' '+["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][new Date(j.tgl).getMonth()]+' '+new Date(j.tgl).getFullYear():'-';
+    return '<div class="sched-item"><div class="sched-dot"></div><div class="sched-date">'+tglFmt+(j.waktu?' '+j.waktu:'')+'</div><div class="sched-name">'+j.label+(j.tempat?' – '+j.tempat:'')+'</div></div>';
+  }).join('');
+}
+
+// ===== LOGIN =====
+async function doLogin(){
+  var e=document.getElementById('loginEmail').value;
+  var p=document.getElementById('loginPass').value;
+  if(!e||p!=='admin123'){document.getElementById('loginErr').style.display='block';return;}
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('mainApp').style.display='flex';
+  showToast('⏳ Memuat data tersimpan...');
+  await loadAllFromStorage();
+  renderAll();updateStats();
+  showPage('dashboard',document.querySelectorAll('.nav-item')[0]);
+}
+function doLogout(){
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+}
+
+// ===== NAVIGASI =====
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  var lbl={dashboard:'Dashboard',ibu:'Data Ibu Hamil',balita:'Data Balita',imunisasi:'Imunisasi',laporan:'Laporan'};
+  document.getElementById('breadcrumb').innerHTML='Dashboard / <b>'+lbl[name]+'</b>';
+  updateStats();
+  if(name==='laporan') renderLaporan();
+}
+
+// ===== HELPERS =====
+function hitungUmurIbu(){
+  var tgl=document.getElementById('ibuTglLahir').value;
+  if(!tgl)return;
+  var lahir=new Date(tgl), now=new Date();
+  var umur=now.getFullYear()-lahir.getFullYear();
+  var m=now.getMonth()-lahir.getMonth();
+  if(m<0||(m===0&&now.getDate()<lahir.getDate()))umur--;
+  document.getElementById('ibuUmur').value=umur+' tahun';
+}
+function hitungUK(){
+  var hpht=document.getElementById('ibuHPHT').value;
+  if(!hpht)return;
+  var h=new Date(hpht), now=new Date();
+  var ms=now-h, days=Math.floor(ms/86400000);
+  var minggu=Math.floor(days/7), hari=days%7;
+  document.getElementById('ibuUK').value=minggu+' minggu '+hari+' hari';
+  // HPL = HPHT + 280 hari (Naegele)
+  var hpl=new Date(h.getTime()+280*86400000);
+  document.getElementById('ibuHPL').value=hpl.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  // Trimester
+  var tri=minggu<14?'Trimester 1 (≤13 minggu)':minggu<28?'Trimester 2 (14–27 minggu)':'Trimester 3 (28+ minggu)';
+  document.getElementById('ibuTrimester').value=tri;
+}
+function cekLILA(){
+  var val=parseFloat(document.getElementById('ibuLILA').value);
+  if(isNaN(val))return;
+  if(val<23.5){
+    document.getElementById('ibuLILA').style.borderColor='#dc2626';
+    showToast('⚠️ LILA <23,5 cm – KEK (Kekurangan Energi Kronik)!');
+  } else {
+    document.getElementById('ibuLILA').style.borderColor='var(--primary)';
+  }
+}
+function cekHb(){
+  var val=parseFloat(document.getElementById('ibuHb').value);
+  if(isNaN(val))return;
+  if(val<11){
+    document.getElementById('ibuHb').style.borderColor='#dc2626';
+    showToast('⚠️ Hb <11 g/dL – indikasi ANEMIA pada kehamilan!');
+  } else {
+    document.getElementById('ibuHb').style.borderColor='var(--primary)';
+  }
+}
+function cekLabReaktif(){
+  var w=[];
+  if(document.getElementById('ibuHIV').value==='Reaktif')w.push('HIV');
+  if(document.getElementById('ibuSifilis').value==='Reaktif')w.push('Sifilis');
+  if(document.getElementById('ibuHepB').value==='Reaktif')w.push('Hepatitis B');
+  var el=document.getElementById('labWarning');
+  el.textContent=w.length?'⚠️ Hasil Reaktif: '+w.join(', ')+' — segera rujuk untuk tata laksana & pencegahan penularan ke bayi.':'';
+}
+function hitungUsiaBalita(){
+  var tgl=document.getElementById('balitaTglLahir').value;
+  if(!tgl)return;
+  var lahir=new Date(tgl), now=new Date();
+  var bln=(now.getFullYear()-lahir.getFullYear())*12+(now.getMonth()-lahir.getMonth());
+  if(now.getDate()<lahir.getDate())bln--;
+  var thn=Math.floor(bln/12), sisaBln=bln%12;
+  var txt=thn>0?thn+' tahun '+sisaBln+' bulan':bln+' bulan';
+  document.getElementById('balitaUsia').value=txt+' ('+bln+' bln)';
+}
+// Tabel median berat badan menurut umur (BB/U), pendekatan WHO Child Growth Standards 2006 (kg)
+// Interpolasi linear antar titik umur. SD didekati ~12% dari median (pendekatan skrining, bukan tabel LMS penuh).
+var BBU_BOY=[[0,3.3],[1,4.5],[2,5.6],[3,6.4],[4,7.0],[5,7.5],[6,7.9],[7,8.3],[8,8.6],[9,8.9],[10,9.2],[11,9.4],[12,9.6],[15,10.3],[18,10.9],[21,11.5],[24,12.2],[30,13.3],[36,14.3],[42,15.3],[48,16.3],[54,17.3],[60,18.3]];
+var BBU_GIRL=[[0,3.2],[1,4.2],[2,5.1],[3,5.8],[4,6.4],[5,6.9],[6,7.3],[7,7.6],[8,7.9],[9,8.2],[10,8.5],[11,8.7],[12,8.9],[15,9.6],[18,10.2],[21,10.9],[24,11.5],[30,12.7],[36,13.9],[42,14.8],[48,15.9],[54,16.8],[60,18.2]];
+function interpMedian(table,bln){
+  bln=Math.max(0,Math.min(60,bln));
+  for(var i=0;i<table.length-1;i++){
+    var a=table[i],b=table[i+1];
+    if(bln>=a[0]&&bln<=b[0]){
+      var frac=(b[0]===a[0])?0:(bln-a[0])/(b[0]-a[0]);
+      return a[1]+frac*(b[1]-a[1]);
+    }
+  }
+  return table[table.length-1][1];
+}
+function hitungStatusGizi(){
+  var bb=parseFloat(document.getElementById('balitaBB').value);
+  var jk=document.getElementById('balitaJK').value;
+  var tgl=document.getElementById('balitaTglLahir').value;
+  var giziEl=document.getElementById('balitaGizi');
+  var resultBox=document.getElementById('giziAutoResult');
+  if(isNaN(bb)||!jk||!tgl){return;}
+  var lahir=new Date(tgl), now=new Date();
+  var bln=(now.getFullYear()-lahir.getFullYear())*12+(now.getMonth()-lahir.getMonth());
+  if(now.getDate()<lahir.getDate())bln--;
+  if(bln<0||bln>60){
+    resultBox.innerHTML='<span style="color:var(--text-muted)">Perhitungan otomatis hanya untuk usia 0-60 bulan. Isi Status Gizi secara manual.</span>';
+    return;
+  }
+  var table=jk==='L'?BBU_BOY:BBU_GIRL;
+  var median=interpMedian(table,bln);
+  var sd=median*0.12; // pendekatan skrining
+  var z=(bb-median)/sd;
+  var kategori, badgeColor;
+  if(z<-3){kategori='Gizi Buruk';badgeColor='#dc2626';}
+  else if(z<-2){kategori='Gizi Kurang';badgeColor='#f0a500';}
+  else if(z<=1){kategori='Gizi Baik';badgeColor='#1a6b4a';}
+  else if(z<=2){kategori='Gizi Lebih (Risiko)';badgeColor='#2563eb';}
+  else {kategori='Obesitas';badgeColor='#dc2626';}
+  giziEl.value=kategori.replace(' (Risiko)','');
+  resultBox.innerHTML='<b>Estimasi: '+kategori+'</b> (Z-score BB/U ≈ '+z.toFixed(2)+' SD, median rujukan '+median.toFixed(1)+' kg)<br>'+
+    '<span style="color:'+badgeColor+';font-weight:600;">'+(z<-2?'⚠️ Perlu perhatian & rujukan gizi lebih lanjut.':'')+'</span><br>'+
+    '<span style="color:#7c2d12;">Ini estimasi skrining awal (indeks BB/U saja), bukan diagnosis final. Konfirmasi dengan grafik KMS/Buku KIA fisik atau petugas gizi/bidan, terutama untuk memastikan status stunting (TB/U) dan wasting (BB/TB).</span>';
+}
+function hitungPerkembangan(){
+  var aspek=['balitaMotorikKasar','balitaMotorikHalus','balitaBahasa','balitaSosial'].map(id=>document.getElementById(id).value);
+  var overallEl=document.getElementById('balitaPerkembangan');
+  if(aspek.some(v=>v==='Penyimpangan')){overallEl.value='Penyimpangan';}
+  else if(aspek.some(v=>v==='Meragukan')){overallEl.value='Meragukan';}
+  else if(aspek.every(v=>v==='Sesuai Usia')){overallEl.value='Sesuai Usia';}
+  else {overallEl.value='Belum lengkap diperiksa';}
+}
+function hitungImunBerikutnya(){
+  var tgl=document.getElementById('imunTanggal').value;
+  var jenis=document.getElementById('imunJenis').value;
+  if(!tgl)return;
+  var d=new Date(tgl);
+  var jadwal={
+    'DPT-HB-Hib':56,'Polio (OPV)':56,'PCV':56,'Rotavirus':56,
+    'Hepatitis B (HB-0)':30,'BCG':0,'MR/Campak-Rubela':0
+  };
+  var plus=jadwal[jenis]||0;
+  if(plus>0){
+    d.setDate(d.getDate()+plus);
+    document.getElementById('imunBerikutnya').value=d.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  } else {
+    document.getElementById('imunBerikutnya').value='—';
+  }
+}
+function isiDosisOptions(){
+  var jenis=document.getElementById('imunJenis').value;
+  var dosisEl=document.getElementById('imunDosis');
+  var maxDosis={'Hepatitis B (HB-0)':1,'BCG':1,'MR/Campak-Rubela':2,'HPV':3,'TT':5};
+  var max=maxDosis[jenis]||4;
+  dosisEl.innerHTML='';
+  var labels={1:'1',2:'2',3:'3',4:'4 (Booster)',5:'5'};
+  for(var i=1;i<=max;i++){dosisEl.innerHTML+='<option value="'+i+'">'+(labels[i]||i)+'</option>';}
+}
+
+// ===== BADGE =====
+function badgeGizi(val){
+  var map={'Gizi Baik':'bg','Gizi Kurang':'bo','Gizi Buruk':'br','Gizi Lebih':'bb','Obesitas':'by'};
+  return '<span class="badge '+(map[val]||'bb')+'">'+val+'</span>';
+}
+function badgeRisiko(val){
+  if(val==='Rendah')return '<span class="badge bg">Risiko Rendah</span>';
+  if(val==='Tinggi')return '<span class="badge bo">Risiko Tinggi</span>';
+  if(val==='Sangat Tinggi')return '<span class="badge br">Risiko Sangat Tinggi</span>';
+  return '<span class="badge bb">'+val+'</span>';
+}
+
+// ===== RENDER =====
+function renderAll(){renderIbu(dataIbu);renderBalita(dataBalita);renderImun(dataImun);renderJadwal();renderLaporan();}
+
+function renderIbu(data){
+  var b=document.getElementById('ibuBody');
+  if(!data.length){b.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:24px;">Belum ada data ibu hamil</td></tr>';document.getElementById('ibuInfo').textContent='0 entri';return;}
+  b.innerHTML=data.map((r,i)=>`<tr>
+    <td>${i+1}</td>
+    <td><b>${r.nama}</b></td>
+    <td>${r.nik||'-'}</td>
+    <td>${r.umur||'-'}</td>
+    <td>${r.uk||'-'}</td>
+    <td>${r.lila?r.lila+' cm':'-'}</td>
+    <td>${r.td||'-'}</td>
+    <td><span class="badge bb">${r.kunjungan||'-'}</span></td>
+    <td>${badgeRisiko(r.risiko)}</td>
+    <td>
+      <button class="btn-edit" onclick="editIbu(${dataIbu.indexOf(r)})">Edit</button>
+      <button class="btn-del" onclick="delIbu(${dataIbu.indexOf(r)})">Hapus</button>
+    </td>
+  </tr>`).join('');
+  document.getElementById('ibuInfo').textContent=data.length+' entri';
+}
+
+function renderBalita(data){
+  var b=document.getElementById('balitaBody');
+  if(!data.length){b.innerHTML='<tr><td colspan="11" style="text-align:center;color:var(--text-muted);padding:24px;">Belum ada data balita</td></tr>';document.getElementById('balitaInfo').textContent='0 entri';return;}
+  b.innerHTML=data.map((r,i)=>`<tr>
+    <td>${i+1}</td>
+    <td><b>${r.nama}</b> ${r.jk==='L'?'♂':'♀'}</td>
+    <td>${r.nik||'-'}</td>
+    <td>${r.tglLahir?new Date(r.tglLahir).toLocaleDateString('id-ID'):'-'}</td>
+    <td>${r.usia||'-'}</td>
+    <td>${r.bb?r.bb+' kg':'-'}</td>
+    <td>${r.tb?r.tb+' cm':'-'}</td>
+    <td>${r.lk?r.lk+' cm':'-'}</td>
+    <td>${badgeGizi(r.gizi)}</td>
+    <td>${r.asi?'<span class="badge bg">'+r.asi+'</span>':'-'}</td>
+    <td>
+      <button class="btn-edit" onclick="editBalita(${dataBalita.indexOf(r)})">Edit</button>
+      <button class="btn-edit" style="border-color:var(--blue);color:var(--blue);" onclick="showGrafik(${dataBalita.indexOf(r)})">📈 Grafik</button>
+      <button class="btn-del" onclick="delBalita(${dataBalita.indexOf(r)})">Hapus</button>
+    </td>
+  </tr>`).join('');
+  document.getElementById('balitaInfo').textContent=data.length+' entri';
+}
+
+function renderImun(data){
+  var b=document.getElementById('imunBody');
+  if(!data.length){b.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:24px;">Belum ada data imunisasi</td></tr>';document.getElementById('imunInfo').textContent='0 entri';return;}
+  b.innerHTML=data.map((r,i)=>`<tr>
+    <td>${i+1}</td>
+    <td><b>${r.anak}</b></td>
+    <td>${r.ibu}</td>
+    <td>${r.tglLahirAnak?new Date(r.tglLahirAnak).toLocaleDateString('id-ID'):'-'}</td>
+    <td>${r.jenis||'-'}</td>
+    <td><span class="badge bb">Dosis ${r.dosis}</span></td>
+    <td>${r.tgl||'-'}</td>
+    <td>${r.berikutnya||'-'}</td>
+    <td>${r.petugas||'-'}</td>
+    <td>
+      <button class="btn-edit" onclick="editImun(${dataImun.indexOf(r)})">Edit</button>
+      <button class="btn-del" onclick="delImun(${dataImun.indexOf(r)})">Hapus</button>
+    </td>
+  </tr>`).join('');
+  document.getElementById('imunInfo').textContent=data.length+' entri';
+}
+
+// ===== FILTER =====
+function filterTable(type,val){
+  val=val.toLowerCase();
+  if(type==='ibu')renderIbu(dataIbu.filter(r=>r.nama.toLowerCase().includes(val)));
+  if(type==='balita')renderBalita(dataBalita.filter(r=>r.nama.toLowerCase().includes(val)));
+  if(type==='imunisasi')renderImun(dataImun.filter(r=>r.anak.toLowerCase().includes(val)||r.ibu.toLowerCase().includes(val)));
+}
+
+// ===== MODAL =====
+function openModal(t){document.getElementById('modal-'+t).classList.add('open');}
+function closeModal(t){
+  document.getElementById('modal-'+t).classList.remove('open');
+  document.querySelectorAll('#modal-'+t+' input, #modal-'+t+' select, #modal-'+t+' textarea').forEach(el=>{
+    if(el.type==='hidden')return;
+    if(el.tagName==='SELECT')el.selectedIndex=0;
+    else el.value='';
+    el.style.borderColor='';
+  });
+  var titleMap={ibu:'Tambah Data Ibu Hamil',balita:'Tambah Data Balita',imunisasi:'Tambah Data Imunisasi'};
+  var titleEl=document.getElementById(t+'ModalTitle');
+  if(titleEl&&titleMap[t])titleEl.textContent=titleMap[t];
+}
+
+// ===== SAVE IBU =====
+function saveIbu(){
+  var n=document.getElementById('ibuNama').value.trim();
+  if(!n){showToast('❌ Nama ibu wajib diisi!');return;}
+  var idx=document.getElementById('ibuEditIdx').value;
+  var obj={
+    nama:n, nik:document.getElementById('ibuNIK').value,
+    hp:document.getElementById('ibuHP').value,
+    umur:document.getElementById('ibuUmur').value,
+    tglLahir:document.getElementById('ibuTglLahir').value,
+    alamat:document.getElementById('ibuAlamat').value,
+    goldar:document.getElementById('ibuGoldar').value,
+    g:document.getElementById('ibuG').value, p:document.getElementById('ibuP').value, a:document.getElementById('ibuA').value,
+    hpht:document.getElementById('ibuHPHT').value, hpl:document.getElementById('ibuHPL').value,
+    uk:document.getElementById('ibuUK').value, trimester:document.getElementById('ibuTrimester').value,
+    bb:document.getElementById('ibuBB').value, tb:document.getElementById('ibuTB').value,
+    lila:document.getElementById('ibuLILA').value, td:document.getElementById('ibuTD').value,
+    tfu:document.getElementById('ibuTFU').value,
+    kunjungan:document.getElementById('ibuKunjungan').value,
+    tglKunjungan:document.getElementById('ibuTglKunjungan').value,
+    risiko:document.getElementById('ibuRisiko').value,
+    rencanaBersalin:document.getElementById('ibuRencanaBersalin').value,
+    catatan:document.getElementById('ibuCatatan').value,
+    fe:document.getElementById('ibuFe').value,
+    tt:document.getElementById('ibuTT').value,
+    suami:document.getElementById('ibuSuami').value,
+    hb:document.getElementById('ibuHb').value,
+    protein:document.getElementById('ibuProtein').value,
+    gds:document.getElementById('ibuGDS').value,
+    hiv:document.getElementById('ibuHIV').value,
+    sifilis:document.getElementById('ibuSifilis').value,
+    hepB:document.getElementById('ibuHepB').value,
+    djj:document.getElementById('ibuDJJ').value,
+    presentasi:document.getElementById('ibuPresentasi').value,
+    temuWicara:document.getElementById('ibuTemuWicara').value,
+    penolong:document.getElementById('ibuPenolong').value,
+    tempatBersalin:document.getElementById('ibuTempatBersalin').value,
+    donor:document.getElementById('ibuDonor').value,
+    transport:document.getElementById('ibuTransport').value,
+  };
+  if(idx!=='')dataIbu[idx]=obj; else dataIbu.push(obj);
+  renderIbu(dataIbu);updateStats();closeModal('ibu');saveAllToStorage();
+  showToast(idx!==''?'✅ Data ibu diperbarui':'✅ Data ibu hamil ditambahkan');
+}
+function editIbu(i){
+  var r=dataIbu[i];
+  document.getElementById('ibuNama').value=r.nama||'';
+  document.getElementById('ibuNIK').value=r.nik||'';
+  document.getElementById('ibuHP').value=r.hp||'';
+  document.getElementById('ibuTglLahir').value=r.tglLahir||'';
+  document.getElementById('ibuUmur').value=r.umur||'';
+  document.getElementById('ibuAlamat').value=r.alamat||'';
+  document.getElementById('ibuGoldar').value=r.goldar||'';
+  document.getElementById('ibuG').value=r.g||'';
+  document.getElementById('ibuP').value=r.p||'';
+  document.getElementById('ibuA').value=r.a||'';
+  document.getElementById('ibuHPHT').value=r.hpht||'';
+  document.getElementById('ibuHPL').value=r.hpl||'';
+  document.getElementById('ibuUK').value=r.uk||'';
+  document.getElementById('ibuTrimester').value=r.trimester||'';
+  document.getElementById('ibuBB').value=r.bb||'';
+  document.getElementById('ibuTB').value=r.tb||'';
+  document.getElementById('ibuLILA').value=r.lila||'';
+  document.getElementById('ibuTD').value=r.td||'';
+  document.getElementById('ibuTFU').value=r.tfu||'';
+  document.getElementById('ibuKunjungan').value=r.kunjungan||'K1';
+  document.getElementById('ibuTglKunjungan').value=r.tglKunjungan||'';
+  document.getElementById('ibuRisiko').value=r.risiko||'Rendah';
+  document.getElementById('ibuRencanaBersalin').value=r.rencanaBersalin||'Puskesmas';
+  document.getElementById('ibuCatatan').value=r.catatan||'';
+  document.getElementById('ibuFe').value=r.fe||'';
+  document.getElementById('ibuTT').value=r.tt||'';
+  document.getElementById('ibuSuami').value=r.suami||'';
+  document.getElementById('ibuHb').value=r.hb||'';
+  document.getElementById('ibuProtein').value=r.protein||'';
+  document.getElementById('ibuGDS').value=r.gds||'';
+  document.getElementById('ibuHIV').value=r.hiv||'Belum Tes';
+  document.getElementById('ibuSifilis').value=r.sifilis||'Belum Tes';
+  document.getElementById('ibuHepB').value=r.hepB||'Belum Tes';
+  document.getElementById('ibuDJJ').value=r.djj||'';
+  document.getElementById('ibuPresentasi').value=r.presentasi||'';
+  document.getElementById('ibuTemuWicara').value=r.temuWicara||'';
+  document.getElementById('ibuPenolong').value=r.penolong||'';
+  document.getElementById('ibuTempatBersalin').value=r.tempatBersalin||'';
+  document.getElementById('ibuDonor').value=r.donor||'';
+  document.getElementById('ibuTransport').value=r.transport||'';
+  document.getElementById('ibuEditIdx').value=i;
+  document.getElementById('ibuModalTitle').textContent='Edit Data Ibu Hamil';
+  openModal('ibu');
+}
+function delIbu(i){if(confirm('Hapus data ibu ini?')){dataIbu.splice(i,1);renderIbu(dataIbu);updateStats();showToast('🗑️ Data ibu dihapus');saveAllToStorage();}}
+
+// ===== SAVE BALITA =====
+function saveBalita(){
+  var n=document.getElementById('balitaNama').value.trim();
+  if(!n){showToast('❌ Nama anak wajib diisi!');return;}
+  var idx=document.getElementById('balitaEditIdx').value;
+  var obj={
+    nama:n, nik:document.getElementById('balitaNIK').value,
+    jk:document.getElementById('balitaJK').value,
+    tglLahir:document.getElementById('balitaTglLahir').value,
+    usia:document.getElementById('balitaUsia').value,
+    ibu:document.getElementById('balitaIbu').value,
+    ayah:document.getElementById('balitaAyah').value,
+    alamat:document.getElementById('balitaAlamat').value,
+    bbLahir:document.getElementById('balitaBBLahir').value,
+    pbLahir:document.getElementById('balitaPBLahir').value,
+    jenisPersalinan:document.getElementById('balitaJenisPersalinan').value,
+    bb:document.getElementById('balitaBB').value,
+    tb:document.getElementById('balitaTB').value,
+    lk:document.getElementById('balitaLK').value,
+    tglTimbang:document.getElementById('balitaTglTimbang').value,
+    gizi:document.getElementById('balitaGizi').value,
+    asi:document.getElementById('balitaASI').value,
+    mpasi:document.getElementById('balitaMPASI').value,
+    perkembangan:document.getElementById('balitaPerkembangan').value,
+    catatan:document.getElementById('balitaCatatan').value,
+    vitATgl:document.getElementById('balitaVitATgl').value,
+    vitADosis:document.getElementById('balitaVitADosis').value,
+    motorikKasar:document.getElementById('balitaMotorikKasar').value,
+    motorikHalus:document.getElementById('balitaMotorikHalus').value,
+    bahasa:document.getElementById('balitaBahasa').value,
+    sosial:document.getElementById('balitaSosial').value,
+  };
+  var existing=(idx!=='')?dataBalita[idx]:null;
+  obj.riwayat=existing&&existing.riwayat?existing.riwayat.slice():[];
+  // Catat riwayat penimbangan (untuk grafik KMS) tiap kali BB diisi pada tanggal timbang tertentu
+  if(obj.bb){
+    var tglCatat=obj.tglTimbang||new Date().toISOString().slice(0,10);
+    var bulanKe=hitungBulanDariLahir(obj.tglLahir,tglCatat);
+    var sudahAda=obj.riwayat.findIndex(r=>r.tgl===tglCatat);
+    var entry={tgl:tglCatat,bulan:bulanKe,bb:parseFloat(obj.bb),tb:obj.tb?parseFloat(obj.tb):null,gizi:obj.gizi};
+    if(sudahAda>-1)obj.riwayat[sudahAda]=entry; else obj.riwayat.push(entry);
+    obj.riwayat.sort((a,b)=>a.bulan-b.bulan);
+  }
+  if(idx!=='')dataBalita[idx]=obj; else dataBalita.push(obj);
+  renderBalita(dataBalita);updateStats();closeModal('balita');saveAllToStorage();
+  showToast(idx!==''?'✅ Data balita diperbarui':'✅ Data balita ditambahkan');
+}
+function hitungBulanDariLahir(tglLahir,tglUkur){
+  if(!tglLahir||!tglUkur)return 0;
+  var l=new Date(tglLahir),u=new Date(tglUkur);
+  var bln=(u.getFullYear()-l.getFullYear())*12+(u.getMonth()-l.getMonth());
+  if(u.getDate()<l.getDate())bln--;
+  return Math.max(0,bln);
+}
+function editBalita(i){
+  var r=dataBalita[i];
+  var fields={balitaNama:'nama',balitaNIK:'nik',balitaJK:'jk',balitaTglLahir:'tglLahir',balitaUsia:'usia',balitaIbu:'ibu',balitaAyah:'ayah',balitaAlamat:'alamat',balitaBBLahir:'bbLahir',balitaPBLahir:'pbLahir',balitaJenisPersalinan:'jenisPersalinan',balitaBB:'bb',balitaTB:'tb',balitaLK:'lk',balitaTglTimbang:'tglTimbang',balitaGizi:'gizi',balitaASI:'asi',balitaMPASI:'mpasi',balitaPerkembangan:'perkembangan',balitaCatatan:'catatan',balitaVitATgl:'vitATgl',balitaVitADosis:'vitADosis',balitaMotorikKasar:'motorikKasar',balitaMotorikHalus:'motorikHalus',balitaBahasa:'bahasa',balitaSosial:'sosial'};
+  Object.entries(fields).forEach(([id,key])=>{document.getElementById(id).value=key?(r[key]||''):'';});
+  document.getElementById('balitaEditIdx').value=i;
+  document.getElementById('balitaModalTitle').textContent='Edit Data Balita';
+  openModal('balita');
+}
+function delBalita(i){if(confirm('Hapus data balita ini?')){dataBalita.splice(i,1);renderBalita(dataBalita);updateStats();showToast('🗑️ Data balita dihapus');saveAllToStorage();}}
+
+// ===== SAVE IMUNISASI =====
+function saveImun(){
+  var an=document.getElementById('imunAnak').value.trim();
+  var ib=document.getElementById('imunIbu').value.trim();
+  var jenis=document.getElementById('imunJenis').value;
+  if(!an||!ib||!jenis){showToast('❌ Nama anak, ibu, dan jenis imunisasi wajib diisi!');return;}
+  var idx=document.getElementById('imunEditIdx').value;
+  var tgl=document.getElementById('imunTanggal').value;
+  var tglFmt=tgl?new Date(tgl).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}):'-';
+  var obj={
+    anak:an, ibu:ib,
+    tglLahirAnak:document.getElementById('imunTglLahirAnak').value,
+    jk:document.getElementById('imunJK').value,
+    jenis:jenis, dosis:document.getElementById('imunDosis').value,
+    tgl:tglFmt, tglRaw:tgl,
+    berikutnya:document.getElementById('imunBerikutnya').value,
+    cara:document.getElementById('imunCara').value,
+    petugas:document.getElementById('imunPetugas').value,
+    lokasi:document.getElementById('imunLokasi').value,
+    kipi:document.getElementById('imunKIPI').value,
+    catatan:document.getElementById('imunCatatan').value,
+  };
+  if(idx!=='')dataImun[idx]=obj; else dataImun.push(obj);
+  renderImun(dataImun);updateStats();closeModal('imunisasi');saveAllToStorage();
+  showToast(idx!==''?'✅ Data imunisasi diperbarui':'✅ Data imunisasi disimpan');
+}
+function editImun(i){
+  var r=dataImun[i];
+  document.getElementById('imunAnak').value=r.anak||'';
+  document.getElementById('imunIbu').value=r.ibu||'';
+  document.getElementById('imunTglLahirAnak').value=r.tglLahirAnak||'';
+  document.getElementById('imunJK').value=r.jk||'';
+  document.getElementById('imunJenis').value=r.jenis||'';
+  document.getElementById('imunDosis').value=r.dosis||'1';
+  document.getElementById('imunTanggal').value=r.tglRaw||'';
+  document.getElementById('imunBerikutnya').value=r.berikutnya||'';
+  document.getElementById('imunCara').value=r.cara||'';
+  document.getElementById('imunPetugas').value=r.petugas||'';
+  document.getElementById('imunLokasi').value=r.lokasi||'';
+  document.getElementById('imunKIPI').value=r.kipi||'Tidak ada';
+  document.getElementById('imunCatatan').value=r.catatan||'';
+  document.getElementById('imunEditIdx').value=i;
+  document.getElementById('imunModalTitle').textContent='Edit Data Imunisasi';
+  openModal('imunisasi');
+}
+function delImun(i){if(confirm('Hapus data imunisasi ini?')){dataImun.splice(i,1);renderImun(dataImun);updateStats();showToast('🗑️ Data imunisasi dihapus');saveAllToStorage();}}
+
+// ===== JADWAL =====
+function saveJadwal(){
+  var kat=document.getElementById('jadwalKegiatan').value;
+  var n=document.getElementById('jadwalNama').value.trim();
+  var label=(kat==='Lainnya'&&n)?n:kat;
+  var t=document.getElementById('jadwalTgl').value;
+  var waktu=document.getElementById('jadwalWaktu').value;
+  var tempat=document.getElementById('jadwalTempat').value;
+  if(!t){showToast('❌ Tanggal wajib diisi!');return;}
+  dataJadwal.push({label:label,tgl:t,waktu:waktu,tempat:tempat});
+  dataJadwal.sort((a,b)=>new Date(a.tgl)-new Date(b.tgl));
+  renderJadwal();
+  closeModal('jadwal');showToast('✅ Jadwal ditambahkan');saveAllToStorage();
+}
+
+// ===== STATS =====
+function updateStats(){
+  document.getElementById('statIbu').textContent=dataIbu.length;
+  document.getElementById('statBalita').textContent=dataBalita.length;
+  document.getElementById('statImun').textContent=dataImun.length;
+  var risiko=dataIbu.filter(r=>r.risiko==='Tinggi'||r.risiko==='Sangat Tinggi').length;
+  document.getElementById('statRisiko').textContent=risiko;
+}
+
+// ===== LAPORAN =====
+function renderLaporan(){
+  // Gizi
+  var giziMap={};
+  dataBalita.forEach(r=>{giziMap[r.gizi]=(giziMap[r.gizi]||0)+1;});
+  var giziEl=document.getElementById('laporanGizi');
+  if(!dataBalita.length){giziEl.innerHTML='<span style="color:var(--text-muted)">Belum ada data balita</span>';
+  }else{
+    giziEl.innerHTML=Object.entries(giziMap).map(([k,v])=>`<div>${badgeGizi(k)} <b>${v}</b> anak (${Math.round(v/dataBalita.length*100)}%)</div>`).join('');
+  }
+  // Risiko
+  var risikoMap={};
+  dataIbu.forEach(r=>{risikoMap[r.risiko]=(risikoMap[r.risiko]||0)+1;});
+  var risikoEl=document.getElementById('laporanRisiko');
+  if(!dataIbu.length){risikoEl.innerHTML='<span style="color:var(--text-muted)">Belum ada data ibu hamil</span>';
+  }else{
+    risikoEl.innerHTML=Object.entries(risikoMap).map(([k,v])=>`<div>${badgeRisiko(k)} <b>${v}</b> ibu</div>`).join('');
+  }
+  // Imunisasi
+  var imunMap={};
+  dataImun.forEach(r=>{imunMap[r.jenis]=(imunMap[r.jenis]||0)+1;});
+  var imunEl=document.getElementById('laporanImun');
+  if(!dataImun.length){imunEl.innerHTML='<span style="color:var(--text-muted)">Belum ada data imunisasi</span>';
+  }else{
+    imunEl.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:10px;">'+Object.entries(imunMap).map(([k,v])=>`<span class="badge bb">${k}: ${v}×</span>`).join('')+'</div>';
+  }
+}
+
+// ===== GRAFIK KMS =====
+function showGrafik(i){
+  var r=dataBalita[i];
+  document.getElementById('grafikTitle').textContent='Grafik Pertumbuhan – '+r.nama;
+  var riwayat=(r.riwayat||[]).slice().sort((a,b)=>a.bulan-b.bulan);
+  var body=document.getElementById('grafikBody');
+  if(!riwayat.length){
+    body.innerHTML='<p style="color:var(--text-muted);font-size:13px;">Belum ada riwayat penimbangan. Grafik akan muncul otomatis setiap kali data BB & tanggal timbang disimpan lewat form Edit.</p>';
+    openModal('grafik');return;
+  }
+  var table=r.jk==='L'?BBU_BOY:BBU_GIRL;
+  var W=560,H=320,padL=45,padR=15,padT=15,padB=35;
+  var maxBulan=Math.max(60,...riwayat.map(d=>d.bulan));
+  var maxBB=Math.max(...riwayat.map(d=>d.bb),interpMedian(table,maxBulan))+2;
+  function X(bln){return padL+(bln/maxBulan)*(W-padL-padR);}
+  function Y(bb){return H-padB-(bb/maxBB)*(H-padT-padB);}
+  // Garis median WHO & pita -2SD/+2SD (pendekatan)
+  var medPts=[],upPts=[],lowPts=[];
+  for(var b=0;b<=maxBulan;b+=2){
+    var m=interpMedian(table,b), sd=m*0.12;
+    medPts.push(X(b)+','+Y(m));
+    upPts.push(X(b)+','+Y(m+2*sd));
+    lowPts.push(X(b)+','+Y(Math.max(0,m-2*sd)));
+  }
+  var dataPts=riwayat.map(d=>X(d.bulan)+','+Y(d.bb)).join(' ');
+  var dots=riwayat.map(d=>'<circle cx="'+X(d.bulan)+'" cy="'+Y(d.bb)+'" r="4" fill="var(--primary)"></circle><text x="'+X(d.bulan)+'" y="'+(Y(d.bb)-8)+'" font-size="9" text-anchor="middle" fill="var(--text)">'+d.bb+'</text>').join('');
+  var xLabels='';
+  for(var b2=0;b2<=maxBulan;b2+=6){xLabels+='<text x="'+X(b2)+'" y="'+(H-padB+16)+'" font-size="9" text-anchor="middle" fill="var(--text-muted)">'+b2+'bln</text>';}
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;background:white;border:1px solid var(--border);border-radius:8px;">'+
+    '<polyline points="'+upPts.join(' ')+'" fill="none" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="4,3"/>'+
+    '<polyline points="'+medPts.join(' ')+'" fill="none" stroke="#2d9264" stroke-width="1.5"/>'+
+    '<polyline points="'+lowPts.join(' ')+'" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>'+
+    '<polyline points="'+dataPts+'" fill="none" stroke="var(--blue)" stroke-width="2.5"/>'+
+    dots+xLabels+
+    '<text x="'+padL+'" y="12" font-size="9" fill="var(--text-muted)">BB (kg)</text>'+
+    '</svg>';
+  body.innerHTML=svg+'<div style="display:flex;gap:14px;font-size:11px;margin-top:8px;flex-wrap:wrap;">'+
+    '<span>🟢 Median WHO</span><span style="color:#f0a500;">┅ +2 SD</span><span style="color:#dc2626;">┅ -2 SD (batas kurus)</span><span style="color:var(--blue);">━ Berat badan anak</span></div>'+
+    '<div class="status-gizi-guide" style="margin-top:10px;">Grafik ini pendekatan skrining berbasis indeks BB/U (bukan tabel LMS penuh/KMS resmi). Untuk penilaian resmi & rujukan medis, gunakan KMS cetak di Buku KIA atau aplikasi e-PPGBM, dikonfirmasi oleh petugas gizi/bidan.</div>';
+  openModal('grafik');
+}
+function cetakGrafik(){
+  var content=document.getElementById('grafikBody').innerHTML;
+  var title=document.getElementById('grafikTitle').textContent;
+  var w=window.open('','_blank');
+  w.document.write('<html><head><title>'+title+'</title></head><body style="font-family:sans-serif;padding:20px;"><h2>'+title+'</h2>'+content+'</body></html>');
+  w.document.close();w.print();
+}
+
+// ===== PENYIMPANAN PERMANEN (Google Sheets via Apps Script) =====
+async function saveAllToStorage(){
+  if(!dbTerhubung){
+    // Belum dihubungkan ke Google Sheets -> simpan sementara di browser ini saja
+    try{
+      localStorage.setItem('posyandu_demo_dataIbu',JSON.stringify(dataIbu));
+      localStorage.setItem('posyandu_demo_dataBalita',JSON.stringify(dataBalita));
+      localStorage.setItem('posyandu_demo_dataImun',JSON.stringify(dataImun));
+      localStorage.setItem('posyandu_demo_dataJadwal',JSON.stringify(dataJadwal));
+    }catch(e){console.error('Gagal simpan mode demo:',e);}
+    return;
+  }
+  try{
+    var payload={
+      token:APPS_SCRIPT_TOKEN,
+      action:'saveAll',
+      data:{
+        dataIbu:JSON.stringify(dataIbu),
+        dataBalita:JSON.stringify(dataBalita),
+        dataImun:JSON.stringify(dataImun),
+        dataJadwal:JSON.stringify(dataJadwal)
+      }
+    };
+    var res=await fetch(APPS_SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'}, // hindari CORS preflight
+      body:JSON.stringify(payload)
+    });
+    var out=await res.json();
+    if(!out.success){console.error('Gagal simpan ke Sheets:',out.error);showToast('⚠️ Gagal menyimpan ke database: '+(out.error||'tidak diketahui'));}
+  }catch(e){
+    console.error('Gagal menyimpan data:',e);
+    showToast('⚠️ Gagal terhubung ke database, cek koneksi internet');
+  }
+}
+async function loadAllFromStorage(){
+  if(!dbTerhubung){
+    try{
+      var di=localStorage.getItem('posyandu_demo_dataIbu');if(di)dataIbu=JSON.parse(di);
+      var db=localStorage.getItem('posyandu_demo_dataBalita');if(db)dataBalita=JSON.parse(db);
+      var dm=localStorage.getItem('posyandu_demo_dataImun');if(dm)dataImun=JSON.parse(dm);
+      var dj=localStorage.getItem('posyandu_demo_dataJadwal');if(dj)dataJadwal=JSON.parse(dj);
+    }catch(e){console.error('Gagal muat mode demo:',e);}
+    showToast('⚠️ Mode demo: data hanya tersimpan di browser ini, belum tersambung ke database');
+    return;
+  }
+  try{
+    var url=APPS_SCRIPT_URL+'?action=loadAll&token='+encodeURIComponent(APPS_SCRIPT_TOKEN);
+    var res=await fetch(url);
+    var out=await res.json();
+    if(out.success&&out.data){
+      if(out.data.dataIbu)dataIbu=JSON.parse(out.data.dataIbu);
+      if(out.data.dataBalita)dataBalita=JSON.parse(out.data.dataBalita);
+      if(out.data.dataImun)dataImun=JSON.parse(out.data.dataImun);
+      if(out.data.dataJadwal)dataJadwal=JSON.parse(out.data.dataJadwal);
+    }else if(!out.success){
+      console.error('Gagal memuat dari Sheets:',out.error);
+      showToast('⚠️ Gagal memuat data: '+(out.error||'tidak diketahui'));
+    }
+  }catch(e){
+    console.error('Gagal memuat data:',e);
+    showToast('⚠️ Gagal terhubung ke database, cek koneksi internet');
+  }
+}
+
+// ===== EXPORT CSV =====
+function exportCSV(type){
+  var rows=[],headers=[],filename='';
+  if(type==='ibu'){
+    headers=['Nama','NIK','Umur','G-P-A','HPHT','HPL','UK','Trimester','BB','TB','LILA','TD','TFU','Hb','Kunjungan','Fe','TT','Risiko','Penolong','Tempat Bersalin'];
+    rows=dataIbu.map(r=>[r.nama,r.nik,r.umur,(r.g||'')+'-'+(r.p||'')+'-'+(r.a||''),r.hpht,r.hpl,r.uk,r.trimester,r.bb,r.tb,r.lila,r.td,r.tfu,r.hb,r.kunjungan,r.fe,r.tt,r.risiko,r.penolong,r.tempatBersalin]);
+    filename='data_ibu_hamil.csv';
+  } else if(type==='balita'){
+    headers=['Nama','NIK','JK','Tgl Lahir','Usia','Nama Ibu','BB','TB','LK','Status Gizi','ASI Eksklusif','Vitamin A','Perkembangan'];
+    rows=dataBalita.map(r=>[r.nama,r.nik,r.jk,r.tglLahir,r.usia,r.ibu,r.bb,r.tb,r.lk,r.gizi,r.asi,r.vitADosis,r.perkembangan]);
+    filename='data_balita.csv';
+  } else if(type==='imunisasi'){
+    headers=['Nama Anak','Nama Ibu','Tgl Lahir Anak','Jenis Imunisasi','Dosis','Tanggal','Berikutnya','Petugas'];
+    rows=dataImun.map(r=>[r.anak,r.ibu,r.tglLahirAnak,r.jenis,r.dosis,r.tgl,r.berikutnya,r.petugas]);
+    filename='data_imunisasi.csv';
+  }
+  if(!rows.length){showToast('❌ Belum ada data untuk diekspor');return;}
+  var csv=headers.join(';')+'\n'+rows.map(row=>row.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(';')).join('\n');
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  var link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download=filename;
+  link.click();
+  showToast('⬇️ '+filename+' berhasil diunduh');
+}
+
+// ===== TOAST =====
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// Init
+renderAll();updateStats();
+</script>
+</body>
+</html>
