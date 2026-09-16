@@ -1295,7 +1295,29 @@ function cetakGrafik(){
 }
 
 // ===== PENYIMPANAN PERMANEN (Google Sheets via Apps Script) =====
+// PENTING: kita ANTREKAN proses simpan supaya tidak ada 2 permintaan
+// simpan yang berjalan bersamaan (itu penyebab data pertama hilang
+// saat menambah data kedua). Selalu panggil saveAllToStorage(), jangan
+// panggil _saveAllToStorageSekali() langsung.
+var _sedangMenyimpan = null;
+var _perluSimpanLagi = false;
 async function saveAllToStorage(){
+  if(_sedangMenyimpan){
+    // sudah ada proses simpan berjalan -> tandai perlu simpan ulang
+    // setelah proses yang sedang berjalan selesai (bukan bersamaan)
+    _perluSimpanLagi = true;
+    return _sedangMenyimpan;
+  }
+  _sedangMenyimpan = _saveAllToStorageSekali().finally(async function(){
+    _sedangMenyimpan = null;
+    if(_perluSimpanLagi){
+      _perluSimpanLagi = false;
+      await saveAllToStorage();
+    }
+  });
+  return _sedangMenyimpan;
+}
+async function _saveAllToStorageSekali(){
   if(!dbTerhubung){
     // Belum dihubungkan ke Google Sheets -> simpan sementara di browser ini saja
     try{
